@@ -1,107 +1,100 @@
+
+<!--
+* Copyright 2021-2024 SnehTV, Inc.
+* Licensed under MIT (https://github.com/mitthu786/TS-JioTV/blob/main/LICENSE)
+* Created By : TechieSneh
+-->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>SonyLiv+</title>
-    <link rel="shortcut icon" type="image/x-icon" href="../sngprcdnems03.cdnsrv.jio.com/jioimages.cdn.jio.com/imagespublic/logos/sony_liv_logo_1592487267697.png">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css?family=Poppins|Quattrocento+Sans" rel="stylesheet">
-    <style>
-        html, body {
-            font-family: Poppins, sans-serif;
-            background: white;
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-        }
-        .plyr {
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .aspect-ratio-control {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 9999;
-        }
-        :root {
-            --plyr-color-main: #d9230f;
-        }
-    </style>
+    <title>JIOTV+</title>
+    <meta charset="utf-8">
+    <meta name="description" content="ENJOY FREE LIVE JIOTV">
+    <meta name="keywords" content="JIOTV, LIVETV, SPORTS, MOVIES, MUSIC">
+    <meta name="author" content="Techie Sneh">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/BcjC6R8/jiotv.png">
+    <link rel="stylesheet" href="app/assets/css/techiesneh.min.css">
+    <link rel="stylesheet" href="app/assets/css/search.css">
+    <script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script>
+    <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/4.1.5/lazysizes.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-    <div class="aspect-ratio-control">
-        <label for="aspectRatio">Aspect Ratio:</label>
-        <select id="aspectRatio">
-            <option value="16:9">16:9</option>
-            <option value="4:3">4:3</option>
-            <option value="1:1">1:1</option>
-            <option value="21:9">21:9</option>
-        </select>
+    <header>
+        <div id="jtvh1">
+            <img src="https://ik.imagekit.io/techiesneh/tv_logo/jtv-plus_TMaGGk6N0.png" alt="JIOTV+">
+        </div>
+        <div id="userButtons">
+            <button id="loginButton">Login</button>
+            <button id="refreshButton">Refresh</button>
+            <button id="logoutButton">Logout</button>
+            <button id="PlayListButton">PlayList</button>
+        </div>
+    </header></br>
+    <div id="searchWrapper">
+        <input type="text" name="searchBar" id="searchBar" placeholder="Search ..." />
     </div>
-    <video id="player" autoplay controls crossorigin playsinline></video>
+    <div id="content">
+        <div class="container">
+            <div class="filters">
+                <label for="catchupFilter">Catchup:</label>
+                <select id="catchupFilter">
+                    <option value="">All</option>
+                    <option value="y">True</option>
+                    <option value="n">False</option>
+                </select>
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const video = document.getElementById("player");
-            const aspectRatioSelector = document.getElementById("aspectRatio");
-            const hlsUrl = "https://webott.viatv.com.np/v0t1/StarGoldHD.stream/playlist.m3u8";
-            
-            const updateAspectRatio = (aspectRatio) => {
-                const [w, h] = aspectRatio.split(':').map(Number);
-                const ratio = h / w * 100;
-                video.style.height = `${ratio}vh`;
-                video.style.width = `100vw`;
-            };
+                <label for="genreFilter">Genre:</label>
+                <select id="genreFilter">
+                    <option value="">All</option>
+                    <option value="Entertainment">Entertainment</option>
+                    <option value="Movies">Movies</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Infotainment">Infotainment</option>
+                    <option value="News">News</option>
+                    <option value="Music">Music</option>
+                    <option value="Devotional">Devotional</option>
+                    <option value="Business">Business</option>
+                    <option value="Educational">Educational</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="JioDarshan">JioDarshan</option>
+                </select>
 
-            aspectRatioSelector.addEventListener('change', (event) => {
-                updateAspectRatio(event.target.value);
-            });
-
-            if (Hls.isSupported()) {
-                const hls = new Hls({
-                    maxMaxBufferLength: 100,
-                });
-                hls.loadSource(hlsUrl);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    const qualities = hls.levels.map(level => level.height);
-                    const player = new Plyr(video, {
-                        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                        quality: {
-                            default: qualities[0],
-                            options: qualities,
-                            forced: true,
-                            onChange: quality => {
-                                hls.levels.forEach((level, index) => {
-                                    if (level.height === quality) {
-                                        hls.currentLevel = index;
-                                    }
-                                });
-                            }
-                        },
-                        autoplay: true
-                    });
-                    window.player = player;
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = hlsUrl;
-                const player = new Plyr(video, {
-                    controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                    autoplay: true
-                });
-                window.player = player;
-            }
-        });
-    </script>
+                <label for="langFilter">Language:</label>
+                <select id="langFilter">
+                    <option value="">All</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="English">English</option>
+                    <option value="Marathi">Marathi</option>
+                    <option value="Punjabi">Punjabi</option>
+                    <option value="Urdu">Urdu</option>
+                    <option value="Bengali">Bengali</option>
+                    <option value="Malayalam">Malayalam</option>
+                    <option value="Tamil">Tamil</option>
+                    <option value="Gujarati">Gujarati</option>
+                    <option value="Odia">Odia</option>
+                    <option value="Telugu">Telugu</option>
+                    <option value="Bhojpuri">Bhojpuri</option>
+                    <option value="Kannada">Kannada</option>
+                    <option value="Assamese">Assamese</option>
+                    <option value="Nepali">Nepali</option>
+                    <option value="French">French</option>
+                </select>
+            </div>
+            <div id="charactersList" class="row">
+            </div>
+        </div>
+    </div>
+    <script src="app/assets/js/search.js"></script>
 </body>
+
 </html>
